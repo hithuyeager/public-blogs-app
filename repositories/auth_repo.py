@@ -23,7 +23,7 @@ async def fetch_password(conn: asyncpg.Connection ,username: str) -> str:
 #--------------------------------------user session table---------------------------------------------------------
 
 async def add_refresh_token(conn: asyncpg.Connection,user_id: UUID,refresh_token: str) -> str:
-    status = await conn.fetchval("INSERT INTO users_session (user_id,hash_refresh_token) VALUES ($1,$2) RETURNING id",user_id,refresh_token)
+    status = await conn.fetchval("INSERT INTO user_session (user_id,hash_refresh_token) VALUES ($1,$2) RETURNING id",user_id,refresh_token)
     return str(status)
 async def fetch_refresh_token(conn: asyncpg.Connection,user_id: UUID) -> str:
     hashed_refresh_token = await conn.fetchval("SELECT hash_refresh_token FROM user_session WHERE user_id = $1",user_id)
