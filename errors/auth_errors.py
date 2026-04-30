@@ -13,7 +13,7 @@ class InvalidTokenError(AuthError):
 class InvalidTokenTypeError(AuthError):
     def __init__(self):
         super().__init__("WRONG TOKEN TYPE",400)
-class UserALreadyExistError(AuthError):
+class UserAlreadyExistError(AuthError):
     def __init__(self):
         super().__init__("USER ALREADY EXIST",404)
 class UserNotExistError(AuthError):
