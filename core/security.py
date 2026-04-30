@@ -44,9 +44,9 @@ def decode_access_token(token: str) -> dict:
         if payload.get("type") != "access":
             raise InvalidTokenTypeError()
         return payload
-    except ExpiredSignatureError():
+    except ExpiredSignatureError:
         raise ExpiredTokenError()
-    except JWTError():
+    except JWTError:
         raise InvalidTokenError()
     
 def create_refresh_token(user_id:str) -> str:
@@ -60,9 +60,9 @@ def create_refresh_token(user_id:str) -> str:
 def token_rotation(old_refresh_token: str) -> dict:
     try:
         payload = jwt.decode(old_refresh_token,settings.secret_key,algorithms=[settings.algorithm])
-    except ExpiredSignatureError():
+    except ExpiredSignatureError:
         raise ExpiredTokenError()
-    except JWTError():
+    except JWTError:
         raise InvalidTokenError()
     else:
         user_id = payload.get("sub")
@@ -76,7 +76,7 @@ def token_rotation(old_refresh_token: str) -> dict:
 #----------------------------token hashings-------------------------------------------------------
 
 def hash_token(refresh_token: str) -> str:
-    return hashlib.sha56(refresh_token.encode()).hexdigest()
+    return hashlib.sha256(refresh_token.encode()).hexdigest()
 def compare_hash_token(plain: str,hashed_token: str) -> bool:
     return hash_token(plain) == hashed_token
     
