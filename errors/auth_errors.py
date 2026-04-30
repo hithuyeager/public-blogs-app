@@ -22,4 +22,8 @@ class UserNotExistError(AuthError):
 class WrongPasswordError(AuthError):
     def __init__(self):
         super().__init__("WRONG PASSWORD",400)
-        
+class TokenStolenError(AuthError):
+    def __init__(self):
+        super().__init__("USING STOLEN TOKEN AFTER USER LOGOUT",400)
+
+

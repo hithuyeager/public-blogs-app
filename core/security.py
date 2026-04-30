@@ -55,11 +55,24 @@ def create_refresh_token(user_id:str) -> str:
         "exp" : datetime.now(timezone.utc) + timedelta(days = settings.refresh_token_expire),
         "type" : "refresh"
     }
-    return jwt.encode(payload,settings.secret_key, algorithm = settings.algorithm,)
+    return jwt.encode(payload,settings.secret_key, algorithm = settings.algorithm)
+
+def decode_refresh_token(token: str) -> dict:
+    try:
+        payload = jwt.decode(token,settings.secret_key,algorithms=[settings.algorithm])
+        if payload.get("type") != "refresh":
+            raise InvalidTokenTypeError()
+        return payload
+    except ExpiredSignatureError:
+        raise ExpiredTokenError()
+    except JWTError:
+        raise InvalidTokenError()
 
 def token_rotation(old_refresh_token: str) -> dict:
     try:
         payload = jwt.decode(old_refresh_token,settings.secret_key,algorithms=[settings.algorithm])
+        if payload.get("type") != "refresh":
+            raise InvalidTokenTypeError()
     except ExpiredSignatureError:
         raise ExpiredTokenError()
     except JWTError:
@@ -77,7 +90,5 @@ def token_rotation(old_refresh_token: str) -> dict:
 
 def hash_token(refresh_token: str) -> str:
     return hashlib.sha256(refresh_token.encode()).hexdigest()
-def compare_hash_token(plain: str,hashed_token: str) -> bool:
-    return hash_token(plain) == hashed_token
-    
+
 
