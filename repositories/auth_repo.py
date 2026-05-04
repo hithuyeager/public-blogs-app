@@ -18,6 +18,7 @@ async def fetch_user_id(conn:asyncpg.Connection,username: str) -> str:
     return user_id
 async def fetch_password(conn: asyncpg.Connection ,username: str) -> str:
     hash_password = await conn.fetchval("SELECT password FROM users_auth WHERE username = $1",username)
+    return hash_password
 
 
 #--------------------------------------user session table---------------------------------------------------------
