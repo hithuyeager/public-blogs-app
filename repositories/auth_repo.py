@@ -29,11 +29,11 @@ async def add_refresh_token(conn: asyncpg.Connection,user_id: UUID,refresh_token
 async def fetch_refresh_token(conn: asyncpg.Connection,user_id: UUID) -> str:
     hashed_refresh_token = await conn.fetchval("SELECT hash_refresh_token FROM user_session WHERE user_id = $1",UUID(user_id))
     return hashed_refresh_token
-async def replace_refresh_token(conn: asyncpg.Connection,user_id: UUID,hashed_refresh_token: str) -> str:
-    status = await conn.fetchval("UPDATE user_session SET hash_refresh_token = $2 WHERE user_id = $1 RETURNING id",UUID(user_id),hashed_refresh_token)
-    return str(status)
-async def make_user_active(conn: asyncpg.Connection,user_id: UUID) -> str:
-    status = await conn.fetchval("UPDATE user_session SET is_active = true WHERE user_id = $1 RETURNING id",UUID(user_id))
+async def replace_refresh_token(conn, user_id, hashed_refresh_token: str) -> str:
+    status = await conn.fetchval(
+        "UPDATE user_session SET hash_refresh_token = $2, is_active = true WHERE user_id = $1 RETURNING id",
+        UUID(user_id), hashed_refresh_token
+    )
     return str(status)
 async def fetch_user_status(conn: asyncpg.Connection,user_id: UUID) -> bool:
     is_active = await conn.fetchval("SELECT is_active FROM user_session WHERE user_id = $1",UUID(user_id))

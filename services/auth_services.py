@@ -31,8 +31,7 @@ async def log_in(conn: asyncpg.Connection,user_username: str,user_password: str)
     access_token = create_access_token(user_id)
     refresh_token = create_refresh_token(user_id)
     hashed_refresh_token = hash_token(refresh_token)
-    await repo.replace_refresh_token(conn,user_id,hashed_refresh_token)
-    await repo.make_user_active(conn,user_id)
+    await repo.replace_refresh_token(conn, user_id, hashed_refresh_token)
     return {
         "access_token" : access_token,
         "refresh_token" : refresh_token
@@ -48,7 +47,7 @@ async def rotate_token(conn:asyncpg.Connection,refresh_token):
     data = token_rotation(refresh_token)
     new_refresh_token = data.get("refresh_token")
     new_hashed_refresh_token = hash_token(new_refresh_token)
-    await repo.add_refresh_token(conn,user_id,new_hashed_refresh_token)
+    await repo.replace_refresh_token(conn, user_id, new_hashed_refresh_token)
     return {
         "access_token" : data.get("access_token"),
         "refresh_token" : data.get("refresh_token")
