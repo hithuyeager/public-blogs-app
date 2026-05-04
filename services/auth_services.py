@@ -1,15 +1,18 @@
 import asyncpg
+import asyncio
 
 from repositories import auth_repo as repo
 from errors import auth_errors as error
 from core.security import create_access_token,create_refresh_token,hash_password,hash_token,verify_password,token_rotation,decode_refresh_token
 
 
+loop = asyncio.get_event_loop()
+
 async def sign_up(conn: asyncpg.Connection,user_username:str,user_password: str) -> dict:
     user_exist = await repo.username_exist(conn,user_username)
     if user_exist:
         raise error.UserAlreadyExistError()
-    hashed_password = hash_password(user_password)
+    hashed_password = await loop.run_in_executor(None, hash_password, user_password)
     user_id = await repo.create_user(conn,user_username,hashed_password)
     access_token = create_access_token(user_id)
     refresh_token = create_refresh_token(user_id)
@@ -24,7 +27,7 @@ async def log_in(conn: asyncpg.Connection,user_username: str,user_password: str)
     if not user_exist:
         raise error.UserNotExistError()
     stored_hash_password = await repo.fetch_password(conn,user_username)
-    password_correct = verify_password(user_password,stored_hash_password)
+    password_correct = await loop.run_in_executor(None, verify_password, user_password, stored_hash_password)
     if not password_correct:
         raise error.WrongPasswordError()
     user_id = await repo.fetch_user_id(conn,user_username)
