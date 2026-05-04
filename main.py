@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 from database.db_connections import create_pool
 from errors.auth_errors import AuthError
 from core.responses import APIResponse
-from api.auth_router import router
+from api.central_apis import router
 
 
 @asynccontextmanager

@@ -6,7 +6,7 @@ from core.dependencies import get_connection
 from services.auth_services import sign_up,log_in,rotate_token
 from core.responses import APIResponse
 
-router = APIRouter(prefix="/auth")
+router = APIRouter()
 
 @router.post("/signup")
 async def signup(user: Auth ,conn = Depends(get_connection)):

@@ -12,6 +12,8 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(bearer_
     token = credentials.credentials
     try:
         payload = jwt.decode(token,settings.secret_key,algorithms=[settings.algorithm])
+        if payload["type"] != "access":
+            raise error.InvalidTokenTypeError()
     except ExpiredSignatureError:
         raise error.ExpiredTokenError()
     except JWTError:
