@@ -24,17 +24,17 @@ async def fetch_password(conn: asyncpg.Connection ,username: str) -> str:
 #--------------------------------------user session table---------------------------------------------------------
 
 async def add_refresh_token(conn: asyncpg.Connection,user_id: UUID,refresh_token: str) -> str:
-    status = await conn.fetchval("INSERT INTO user_session (user_id,hash_refresh_token) VALUES ($1,$2) RETURNING id",user_id,refresh_token)
+    status = await conn.fetchval("INSERT INTO user_session (user_id,hash_refresh_token) VALUES ($1,$2) RETURNING id",UUID(user_id),refresh_token)
     return str(status)
 async def fetch_refresh_token(conn: asyncpg.Connection,user_id: UUID) -> str:
-    hashed_refresh_token = await conn.fetchval("SELECT hash_refresh_token FROM user_session WHERE user_id = $1",user_id)
+    hashed_refresh_token = await conn.fetchval("SELECT hash_refresh_token FROM user_session WHERE user_id = $1",UUID(user_id))
     return hashed_refresh_token
 async def replace_refresh_token(conn: asyncpg.Connection,user_id: UUID,hashed_refresh_token: str) -> str:
-    status = await conn.fetchval("UPDATE user_session SET hash_refresh_token = $2 WHERE user_id = $1 RETURNING id",user_id,hashed_refresh_token)
+    status = await conn.fetchval("UPDATE user_session SET hash_refresh_token = $2 WHERE user_id = $1 RETURNING id",UUID(user_id),hashed_refresh_token)
     return str(status)
 async def make_user_active(conn: asyncpg.Connection,user_id: UUID) -> str:
-    status = await conn.fetchval("UPDATE user_session SET is_active = true WHERE user_id = $1 RETURNING id",user_id)
+    status = await conn.fetchval("UPDATE user_session SET is_active = true WHERE user_id = $1 RETURNING id",UUID(user_id))
     return str(status)
 async def fetch_user_status(conn: asyncpg.Connection,user_id: UUID) -> bool:
-    is_active = await conn.fetchval("SELECT is_active FROM user_session WHERE user_id = $1",user_id)
+    is_active = await conn.fetchval("SELECT is_active FROM user_session WHERE user_id = $1",UUID(user_id))
     return is_active
