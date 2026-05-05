@@ -12,4 +12,7 @@ async def update_blog(conn: asyncpg.Connection,id: UUID,blog: str) -> bool:
 async def fetch_all_user_blogs(conn: asyncpg.Connection,user_id: UUID,offset: int,limit: int) -> dict:
     rows = await conn.fetch("SELECT id,blog,title,created_at,updated_at FROM users_blogs WHERE user_id = $1 OFFSET $2 LIMIT $3",user_id,offset,limit)
     return [dict(row) for row in rows]
+async def fetch_blogs_count(conn: asyncpg.Connection,user_id: UUID) -> int:
+    count = await conn.fetchval("SELECT COUNT(blog) FROM users_blogs WHERE user_id = $1",user_id)
+    return count
 
