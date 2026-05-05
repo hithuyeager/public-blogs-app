@@ -5,9 +5,9 @@ from contextlib import asynccontextmanager
 
 from database.db_connections import create_pool
 from errors.auth_errors import AuthError
+from errors.blog_errors import BlogErrors
 from core.responses import APIResponse
 from api.central_apis import router
-
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -28,3 +28,14 @@ async def global_exception_handler(request: Request , exc: AuthError):
             data = exc.message
         ).model_dump()
     )
+
+@app.exception_handler(BlogErrors)
+async def global_exception_handler(request: Request , exc: AuthError):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content=APIResponse(
+            status = "error",
+            data = exc.message
+        ).model_dump()
+    )
+
