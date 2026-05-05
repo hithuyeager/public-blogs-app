@@ -17,3 +17,13 @@ async def get_user_blogs(conn: asyncpg.Connection,user_id: UUID,offset: int,limi
         raise error.NegativeOffsetLimitError()
     data = await repo.fetch_all_user_blogs(conn,user_id,offset,limit)
     return data
+async def blog_update(conn: asyncpg.Connection ,user_id: UUID, id: int , blog: str) -> bool :
+    status = await repo.update_blog(conn,user_id,id,blog)
+    if not status:
+        raise error.UpdateError()
+    return True
+
+async def get_single_blog(conn: asyncpg.Connection,user_id: UUID ,blog_id: int) -> dict:
+    data = await repo.fetch_one_blog(conn,user_id,blog_id)
+    return data
+

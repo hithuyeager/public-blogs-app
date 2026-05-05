@@ -12,4 +12,8 @@ class NegativeOffsetLimitError(BlogErrors):
 class BlogsOutOfRangeError(BlogErrors):
     def __init__(self):
         super().__init___("NO MORE BLOGS TO FETCH",404)
+class UpdateError(BlogErrors):
+    def __init__(self):
+        super().__init__("SOMETHING WENT WRONG IN DATABASES WHILE UPDATING",404)
+        
 

@@ -6,7 +6,7 @@ class Title(BaseModel):
 class Blogs(BaseModel):
     blogs: str = Field(min_length=1)
 
-class Pagination(BaseModel):
-    offset: int = Field(gt=0)
-    limit: int = Field(gt=0,lt=50)
-    
+class UpdateBlog(BaseModel):
+    blog_id: int
+    blog: str
+
