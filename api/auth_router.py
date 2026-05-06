@@ -1,7 +1,7 @@
 from fastapi import APIRouter,Depends
 from fastapi.responses import JSONResponse
 
-from schemas.auth_schema import Auth
+from schemas.auth_schema import Auth,RefreshToken
 from core.dependencies import get_connection
 from services.auth_services import sign_up,log_in,rotate_token
 from core.responses import APIResponse
@@ -32,8 +32,8 @@ async def login(user: Auth,conn = Depends(get_connection)):
     )
 
 @router.patch("/tokenrotation")
-async def tokenrotation(refresh_token: str,conn = Depends(get_connection)):
-    result = await rotate_token(conn,refresh_token)
+async def tokenrotation(refresh: RefreshToken,conn = Depends(get_connection)):
+    result = await rotate_token(conn,refresh.refresh_token)
     result.update({"token-type" : "bearer"})
     return JSONResponse(
         status_code=200,
@@ -42,4 +42,3 @@ async def tokenrotation(refresh_token: str,conn = Depends(get_connection)):
             data = result
         ).model_dump()
     )
-
