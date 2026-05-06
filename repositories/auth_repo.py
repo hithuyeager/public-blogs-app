@@ -1,7 +1,6 @@
 import asyncpg
 from uuid import UUID
 
-
 #--------------------------------------users auth table----------------------------------------------------------
 
 async def create_user(conn: asyncpg.Connection,username: str,password: str) -> str:
