@@ -25,5 +25,12 @@ async def blog_update(conn: asyncpg.Connection ,user_id: UUID, id: int , blog: s
 
 async def get_single_blog(conn: asyncpg.Connection,user_id: UUID ,blog_id: int) -> dict:
     data = await repo.fetch_one_blog(conn,user_id,blog_id)
-    return data
+    if not data:
+        raise error.BlogNotFoundError()
+    return dict(data)
 
+async def remove_user_blog(conn: asyncpg.Connection,user_id: UUID , blog_id: int) -> bool:
+    status = await repo.delete_user_blog(conn,user_id,blog_id)
+    if not status:
+        raise error.DeletError()
+    return True

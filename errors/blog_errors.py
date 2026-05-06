@@ -15,5 +15,11 @@ class BlogsOutOfRangeError(BlogErrors):
 class UpdateError(BlogErrors):
     def __init__(self):
         super().__init__("SOMETHING WENT WRONG IN DATABASES WHILE UPDATING",404)
-        
+class DeletError(BlogErrors):
+    def __init__(self):
+        super().__init__("BLOG DOES NOT EXIST OR SOMETHING WENT WRONG IN DATABASES WHILE DELETING",404)
+class BlogNotFoundError(BlogErrors):
+    def __init__(self):
+        super().__init__("BLOG DOES NOT EXIST",404)
+
 

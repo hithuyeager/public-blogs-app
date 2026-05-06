@@ -30,7 +30,7 @@ async def global_exception_handler(request: Request , exc: AuthError):
     )
 
 @app.exception_handler(BlogErrors)
-async def global_exception_handler(request: Request , exc: AuthError):
+async def global_exception_handler(request: Request , exc: BlogErrors):
     return JSONResponse(
         status_code=exc.status_code,
         content=APIResponse(
