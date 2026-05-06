@@ -39,3 +39,11 @@ async def global_exception_handler(request: Request , exc: BlogErrors):
         ).model_dump()
     )
 
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # tighten this in prod
+    allow_methods=["*"],
+    allow_headers=["*"],
+)

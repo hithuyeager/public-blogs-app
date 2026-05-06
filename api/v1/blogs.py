@@ -6,19 +6,18 @@ from uuid import UUID
 
 from services.blog_services import (create_blog,get_user_blogs,blog_update,get_single_blog,remove_user_blog)
 from core.dependencies import (get_connection,get_current_user)
-from schemas.blog_schema import Title,Blogs,UpdateBlog
+from schemas.blog_schema import CreateBlog,UpdateBlog
 from core.responses import APIResponse
 
 router = APIRouter()
 
 @router.post("/create")
 async def create_blogs(
-    title: Title,
-    blog: Blogs,
+    user: CreateBlog,
     conn: asyncpg.Connection = Depends(get_connection),
     user_id: UUID = Depends(get_current_user),
 ) -> JSONResponse:
-    await create_blog(conn,user_id,title.title,blog.blogs)
+    await create_blog(conn,user_id,user.title,user.blogs)
     return JSONResponse(
         status_code=202,
         content=APIResponse(
